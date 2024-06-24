@@ -30,14 +30,15 @@ const studentSchema = new mongoose.Schema({
 
 const Student = mongoose.model('Student', studentSchema);
 
-// Parse the service account credentials from the .env file
-const creds = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-
 // Google Sheets setup
 const doc = new GoogleSpreadsheet('15jGgZY_ab201I638ju5icVIMQirtmFPQiSIKsYklCJI'); // Replace with your sheet ID
 
 async function accessSpreadsheet() {
-    await doc.useServiceAccountAuth(creds);
+    // Use the service account credentials to authorize the Google Spreadsheet
+    await doc.useServiceAccountAuth({
+        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace escaped newlines in the key
+    });
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0]; // Assuming you want to use the first sheet
     return sheet;
