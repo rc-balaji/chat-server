@@ -13,6 +13,28 @@ const users = [
     { user_id: 13, city: 'Tirupur' }
 ];
 
+app.post('/webhook/register', (req, res) => {
+    const params = req.body.queryResult.parameters;
+    
+    const userName = params['user_name'];
+    const email = params['email'];
+    const collegeName = params['college_name'];
+    const dept = params['dept'];
+    const phoneNumber = params['phone-number'];
+
+    console.log('Registered Successfully');
+    console.log(`Name: ${userName}`);
+    console.log(`Email: ${email}`);
+    console.log(`College: ${collegeName}`);
+    console.log(`Dept: ${dept}`);
+    console.log(`Phone Number: ${phoneNumber}`);
+
+    res.json({
+        fulfillmentText: `Registered Successfully || Name: ${userName} || Email: ${email} || College: ${collegeName} || Dept: ${dept} || Phone Number: ${phoneNumber}`
+    });
+});
+
+
 app.post('/webhook/get_city', (req, res) => {
     const intentName = req.body.queryResult.intent.displayName;
 
@@ -43,18 +65,20 @@ app.post('/webhook', (req, res) => {
   
     function handleIntent(agent) {
       const response = {
-        "richContent": [
-          [
-            {
-              "type": "button",
-              "icon": {
-                "type": "chevron_right",
-                "color": "#FF9800"
-              },
-              "text": "Click here to visit Google.com",
-              "link": "https://www.google.com"
+        "fulfillmentMessages": [
+          {
+            "card": {
+              "title": "card title",
+              "subtitle": "card text",
+              "imageUri": "https://example.com/images/example.png",
+              "buttons": [
+                {
+                  "text": "button text",
+                  "postback": "https://example.com/path/for/end-user/to/follow"
+                }
+              ]
             }
-          ]
+          }
         ]
       }
       
