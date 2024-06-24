@@ -14,6 +14,8 @@ const users = [
 ];
 
 app.post('/webhook/register', (req, res) => {
+
+    console.log("Called");
     const params = req.body.queryResult.parameters;
     
     const userName = params['user_name'];
