@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors())
 app.use(bodyParser.json());
 
 app.post('/webhook/registered', (req, res) => {
+
     const intentName = req.body.queryResult.intent.displayName;
 
     if (intentName === 'Get Password Intent') {
