@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { JWT } = require('google-auth-library');
 require('dotenv').config();
 
 const app = express();
@@ -31,14 +32,16 @@ const studentSchema = new mongoose.Schema({
 const Student = mongoose.model('Student', studentSchema);
 
 // Google Sheets setup
-const doc = new GoogleSpreadsheet('15jGgZY_ab201I638ju5icVIMQirtmFPQiSIKsYklCJI'); // Replace with your sheet ID
 
 async function accessSpreadsheet() {
     // Use the service account credentials to authorize the Google Spreadsheet
-    await doc.useServiceAccountAuth({
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace escaped newlines in the key
+    const auth = new JWT({
+        email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace escaped newlines in the key
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
+    const doc = new GoogleSpreadsheet('15jGgZY_ab201I638ju5icVIMQirtmFPQiSIKsYklCJI',auth); // Replace with your sheet ID
+
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0]; // Assuming you want to use the first sheet
     return sheet;
