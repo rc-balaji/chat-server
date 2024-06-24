@@ -89,8 +89,9 @@ app.post('/webhook/register', async (req, res) => {
         console.log(`Phone Number: ${phoneNumber}`);
 
         res.json({
-            fulfillmentText: `Registered Successfully || Name: ${userName} || Email: ${email} || College: ${collegeName} || Dept: ${dept} || Phone Number: ${phoneNumber}`
+            fulfillmentText: `You have successfully registered. Your details are as follows: Name: ${userName}, Email: ${email}, College: ${collegeName}, Department: ${dept}, Phone Number: ${phoneNumber}.`
         });
+        
     } catch (err) {
         console.error('Error saving to MongoDB or Google Sheets', err);
         res.json({
