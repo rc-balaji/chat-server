@@ -1,27 +1,35 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors')
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors())
 app.use(bodyParser.json());
 
-app.post('/webhook/registered', (req, res) => {
+// Sample data
+const users = [
+    { user_id: 12, city: 'Tirupur' },
+    { user_id: 11, city: 'Bengal' },
+    { user_id: 13, city: 'Tirupur' }
+];
 
-    console.log("Called");
+app.post('/webhook/get_city', (req, res) => {
     const intentName = req.body.queryResult.intent.displayName;
 
-    if (intentName === 'Get Password Intent') {
-        const userid = req.body.queryResult.parameters.userid;
-        const password = req.body.queryResult.parameters.password;
+    if (intentName === 'Get City Intent') {
+        const userId = req.body.queryResult.parameters.user_id;
+        const user = users.find(u => u.user_id === userId);
 
-        console.log(`UserID: ${userid}`);
-        console.log(`Password: ${password}`);
+        let responseText = '';
+
+        if (user) {
+            responseText = `The city for user ${userId} is ${user.city}.`;
+        } else {
+            responseText = `I couldn't find the city for user ${userId}.`;
+        }
 
         res.json({
-            fulfillmentText: 'Registered successfully!'
+            fulfillmentText: responseText
         });
     } else {
         res.json({
