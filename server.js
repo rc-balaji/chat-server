@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 
 app.post('/webhook/registered', (req, res) => {
 
+    console.log("Called");
     const intentName = req.body.queryResult.intent.displayName;
 
     if (intentName === 'Get Password Intent') {
